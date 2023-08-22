@@ -1,14 +1,29 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
+import api from "../../services/api";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("manufacturer");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+
+    try {
+      const response = await api.post("/auth/register", {
+        email,
+        password,
+        role,
+      });
+      navigate("/login");
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error registering:", error);
+    }
   };
 
   return (

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./CreateOrder.css";
+import api from "../../services/api";
 
 const CreateOrder = () => {
+  const navigate = useNavigate();
+
   const [order, setOrder] = useState({
     orderId: "",
     from: "",
@@ -25,7 +29,7 @@ const CreateOrder = () => {
     const generatedOrderId = generateOrderId();
 
     try {
-      const response = await axios.post("/api/orders", {
+      const response = await api.post("/orders/createorders", {
         ...order,
         orderId: generatedOrderId,
       });
@@ -47,6 +51,11 @@ const CreateOrder = () => {
     const timestamp = Date.now();
     const uniqueId = Math.floor(Math.random() * 1000);
     return `XB${uniqueId}${timestamp}`;
+  };
+
+  const handleDashboardClick = () => {
+    // Navigate to the "/manufacturerdashboard" route
+    navigate("/manufacturerdashboard");
   };
 
   return (
@@ -94,6 +103,9 @@ const CreateOrder = () => {
             <option value="ShyamTransporter">Shyam Transporter</option>
           </select>
           <button type="submit">Submit Request</button>
+          <button type="button" onClick={handleDashboardClick}>
+            Dashboard
+          </button>
         </form>
       </div>
     </div>

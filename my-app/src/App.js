@@ -1,15 +1,11 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Routes,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import CreateOrder from "./components/Manufacturer/CreateOrder";
 import ManufacturerDashboard from "./components/Manufacturer/ManufacturerDashboard";
 import TransporterDashboard from "./components/Transporter/TransporterDashboard";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   return (
@@ -26,6 +22,7 @@ function App() {
           path="/transporterDashboard"
           element={<TransporterDashboard />}
         />
+        <Route path="/landingpage/:role" element={<LandingPage />} />
       </Routes>
     </Router>
   );
