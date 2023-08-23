@@ -1,66 +1,56 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import axios from "axios"; // You might not need this if not making API calls
+import api from "../../services/api";
 
 const TransporterDashboard = () => {
-  const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderId, setOrderId] = useState("");
+  const [selectedOrderPrice, setSelectedOrderPrice] = useState("");
   const [reply, setReply] = useState("");
-
-  useEffect(() => {
-    const fetchedAssignedOrders = async () => {
-      try {
-        const response = await axios.get("api/assignedorders");
-        setOrders(response.data);
-      } catch (error) {
-        console.error("Error fetching assigned orders:", error);
-      }
-    };
-    fetchedAssignedOrders();
-  }, []);
-
-  const handleOrderSelect = (orderId) => {
-    const order = orders.find((o) => o._id === orderId);
-    setSelectedOrder(order);
-  };
 
   const handleSendReply = async () => {
     try {
-      const response = await axios.post("/api/sendreply", {
-        orderId: selectedOrder._id,
-        reply,
+      // You might want to replace this with your actual API call
+      const response = await api.post("/orders/sendreply", {
+        orderId: orderId, // Hardcoded order ID
+        reply: reply,
+        price: selectedOrderPrice,
       });
-      console.log("Reply sent: ", response.data);
+      console.log("Reply sent:", response.data);
+      setOrderId("");
+      setSelectedOrderPrice("");
       setReply("");
-      setSelectedOrder(null);
     } catch (error) {
-      console.error("Error sending reply: ", error);
+      console.error("Error sending reply:", error);
     }
   };
 
   return (
     <div>
       <h2>Transporter Dashboard</h2>
-      <select onChange={(e) => handleOrderSelect(e.target.value)}>
-        <option value="">Select an Order</option>
-        {orders.map((order) => (
-          <option key={order._id} value={order._id}>
-            {order.orderId}
-          </option>
-        ))}
-      </select>
-      {selectedOrder && (
-        <div>
-          <h3>Selected Order: {selectedOrder.orderId}</h3>
-          <p>From: {selectedOrder.from}</p>
-          <p>To: {selectedOrder.to}</p>
-          <textarea
-            value={reply}
-            onChange={(e) => setReply(e.target.value)}
-            placeholder="Enter your reply..."
-          />
-          <button onClick={handleSendReply}>Send Reply</button>
-        </div>
-      )}
+      <label>
+        Order ID:{" "}
+        <input
+          type="text"
+          value={orderId}
+          onChange={(e) => setOrderId(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Price:{" "}
+        <input
+          type="number"
+          value={selectedOrderPrice}
+          onChange={(e) => setSelectedOrderPrice(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Reply:{" "}
+        <textarea value={reply} onChange={(e) => setReply(e.target.value)} />
+      </label>
+      <br />
+      <button onClick={handleSendReply}>Send Reply</button>
     </div>
   );
 };

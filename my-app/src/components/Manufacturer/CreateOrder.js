@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./CreateOrder.css";
 import api from "../../services/api";
+import io from "socket.io-client";
 
 const CreateOrder = () => {
   const navigate = useNavigate();
@@ -13,8 +14,10 @@ const CreateOrder = () => {
     to: "",
     quantity: "",
     pickupAddress: "",
-    transporter: "",
+    transporter: "64e4cda28dbaef0777e98aad",
   });
+
+  const socket = io("http://localhost:5000");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,14 +36,17 @@ const CreateOrder = () => {
         ...order,
         orderId: generatedOrderId,
       });
+      console.log("Transporter ID:", order.transporter);
+      socket.emit("newOrderNotification", order.transporter);
       console.log("Order Created: ", response.data);
+
       setOrder({
         orderId: "",
         from: "",
         to: "",
         quantity: "",
         pickupAddress: "",
-        transporter: "",
+        transporter: "64e4cda28dbaef0777e98aad",
       });
     } catch (error) {
       console.error("Error creating order: ", error);
@@ -100,7 +106,9 @@ const CreateOrder = () => {
             onChange={handleChange}
           >
             <option value="">Select Transporter</option>
-            <option value="ShyamTransporter">Shyam Transporter</option>
+            <option value="64e4cda28dbaef0777e98aad">
+              snehasismitra@gmail.com
+            </option>
           </select>
           <button type="submit">Submit Request</button>
           <button type="button" onClick={handleDashboardClick}>

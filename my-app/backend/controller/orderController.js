@@ -13,12 +13,38 @@ module.exports = {
         .json({ error: "An error occurred while creating the order" });
     }
   },
-  getAssignedOrders: async (req, res) => {
+  getOrders: async (req, res) => {
     try {
-      const orders = await Order.find({ transporter: req.user._id });
+      const orders = await Order.find();
       res.status(200).json(orders);
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
+    }
+  },
+  sendReply: async (req, res) => {
+    const { orderId, reply, price } = req.body;
+
+    try {
+      // Fetch the order by ID
+      const order = await Order.findById(orderId);
+
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      // Update the order with the reply and price
+      order.reply = reply;
+      order.price = price;
+
+      // Save the updated order
+      await order.save();
+
+      res.status(200).json({ message: "Reply sent successfully" });
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while sending the reply" });
     }
   },
   getOrdersForLandingPage: async (req, res) => {
