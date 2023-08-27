@@ -17,7 +17,7 @@ const CreateOrder = () => {
     transporter: "64e4cda28dbaef0777e98aad",
   });
 
-  const socket = io("http://localhost:5000");
+  const socket = io("https://threewaystudio-site20.onrender.com");
 
   const handleChange = (e) => {
     const { name, value } = e.target;

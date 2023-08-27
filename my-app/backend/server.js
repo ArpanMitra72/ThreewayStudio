@@ -21,10 +21,13 @@ var io = require("socket.io")(server, {
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://127.0.0.1:27017/myapp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://arpanmitra2022:eBZ9CnwojMl4zyJO@myapp.ccjul7d.mongodb.net/myapp?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const db = mongoose.connection;
 
